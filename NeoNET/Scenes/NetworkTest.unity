@@ -4220,7 +4220,7 @@ PrefabInstance:
     - target: {fileID: 8867752149361173875, guid: fb0641b4908ab88428cbda221c1e0ea4,
         type: 3}
       propertyPath: m_ShowOnStart
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb0641b4908ab88428cbda221c1e0ea4, type: 3}
@@ -6407,13 +6407,12 @@ GameObject:
   m_Component:
   - component: {fileID: 983040259}
   - component: {fileID: 983040262}
-  - component: {fileID: 983040261}
-  - component: {fileID: 983040260}
   - component: {fileID: 983040263}
   - component: {fileID: 983040265}
   - component: {fileID: 983040264}
   - component: {fileID: 983040267}
   - component: {fileID: 983040266}
+  - component: {fileID: 983040260}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -6443,60 +6442,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 983040258}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showGUI: 1
-  offsetX: 0
+  offsetX: 250
   offsetY: 0
---- !u!114 &983040261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 983040258}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec862738267237f4d91e6454ff15f4ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnClientConnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientDataReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientError:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerConnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerDataReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerError:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-  DebugEnabled: 0
-  ServerBindAll: 1
-  ServerBindAddress: 127.0.0.1
-  CommunicationPort: 7777
-  MaximumPeerCCU: 100
-  EnetServerPollTimeout: 1
-  EnetClientPollTimeout: 1
-  MaximumPacketSize: 1200
-  Channels: 010000000200000000000000
-  StatisticsCalculationInterval: 0
 --- !u!114 &983040262
 MonoBehaviour:
   m_ObjectHideFlags: 0

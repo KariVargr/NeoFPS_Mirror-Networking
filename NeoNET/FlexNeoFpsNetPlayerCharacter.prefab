@@ -24,9 +24,9 @@ GameObject:
   - component: {fileID: 617423327269837948}
   - component: {fileID: 8384898078447576327}
   - component: {fileID: 8997924801412768899}
-  - component: {fileID: -8679049008826762}
-  - component: {fileID: 1719154124296693147}
-  - component: {fileID: 3051216976329342956}
+  - component: {fileID: 1432141980129176673}
+  - component: {fileID: 2864663801366779869}
+  - component: {fileID: 8685673463936331534}
   m_Layer: 13
   m_Name: NeoFpsNetPlayerCharacter
   m_TagString: Player
@@ -454,7 +454,7 @@ MonoBehaviour:
   serverOnly: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &-8679049008826762
+--- !u!114 &1432141980129176673
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -463,16 +463,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000010381446024}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c6e8001e79980341af98dc404133ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  clientAuthority: 1
-  localPositionSensitivity: 0.01
-  localRotationSensitivity: 0.01
-  localScaleSensitivity: 0.01
---- !u!114 &1719154124296693147
+  _useLocalSpace: 0
+  _intervalType: 1
+  _synchronizeInterval: 0.02
+  _reliable: 0
+  _preciseSynchronization: 1
+  _interpolationFallbehind: 0.06
+  _extrapolationSpan: 0
+  _clientAuthoritative: 1
+  _synchronizeToOwner: 0
+  _synchronizePosition: 0
+  _snapPosition: 0
+  _synchronizeRotation: 0
+  _snapRotation: 0
+  _synchronizeScale: 1
+  _snapScale: 0
+--- !u!114 &2864663801366779869
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -481,17 +492,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000010381446024}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 734b48bea0b204338958ee3d885e11f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f40779ebc4fb2f4f9537d4d162bb1d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  clientAuthority: 1
-  localPositionSensitivity: 0.01
-  localRotationSensitivity: 0.01
-  localScaleSensitivity: 0.01
-  target: {fileID: 4198637582876028}
---- !u!114 &3051216976329342956
+  _useLocalSpace: 1
+  _intervalType: 1
+  _synchronizeInterval: 0.1
+  _reliable: 0
+  _preciseSynchronization: 1
+  _interpolationFallbehind: 0.06
+  _extrapolationSpan: 0
+  _clientAuthoritative: 1
+  _synchronizeToOwner: 1
+  _synchronizePosition: 1
+  _snapPosition: 0
+  _synchronizeRotation: 0
+  _snapRotation: 0
+  _synchronizeScale: 1
+  _snapScale: 0
+  Target: {fileID: 4935261428968312}
+--- !u!114 &8685673463936331534
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -500,16 +522,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000010381446024}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 734b48bea0b204338958ee3d885e11f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f40779ebc4fb2f4f9537d4d162bb1d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  clientAuthority: 1
-  localPositionSensitivity: 0.01
-  localRotationSensitivity: 0.01
-  localScaleSensitivity: 0.01
-  target: {fileID: 4935261428968312}
+  _useLocalSpace: 1
+  _intervalType: 1
+  _synchronizeInterval: 0.1
+  _reliable: 0
+  _preciseSynchronization: 1
+  _interpolationFallbehind: 0.06
+  _extrapolationSpan: 0
+  _clientAuthoritative: 1
+  _synchronizeToOwner: 1
+  _synchronizePosition: 1
+  _snapPosition: 0
+  _synchronizeRotation: 0
+  _snapRotation: 0
+  _synchronizeScale: 1
+  _snapScale: 0
+  Target: {fileID: 4198637582876028}
 --- !u!1 &1000011745390456
 GameObject:
   m_ObjectHideFlags: 0
