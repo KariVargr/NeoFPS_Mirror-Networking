@@ -1,13 +1,22 @@
 # NeoFPS_Mirror-Networking
 
 This is an "In Progress" build
+<p>
+Currently Working<br>
+Client Authority on<br>
+Movement, Aim, Enviro Damage, Shooting, weapon change<br>
+Server Authority on<br>
+Weapon Damage, Health, Ammo<br>
+only 1 Network working Weapon currently
+</p>
+
 
 # Install Required
 <p>NeoFPS ( https://assetstore.unity.com/packages/templates/systems/neofps-fps-controller-template-toolkit-150179 )</p>
 <p>Mirror Networking ( https://mirror-networking.com/ ) ( https://assetstore.unity.com/packages/tools/network/mirror-129321 )</p>
 
 # Files that need to be adjusted 
-<p>File: FpsFameMode.cs<br>
+<p>File: FpsGameMode.cs<br>
 ( This allows the use of FpsNetCharacter and FpsNetPlayerController )<br>
 Line 132: protected abstract void ProcessOldPlayerCharacter(ICharacter oldCharacter);<br>
 Line 134: protected abstract ICharacter GetPlayerCharacterPrototype(IController player);</p>
