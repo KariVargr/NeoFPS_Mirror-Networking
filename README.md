@@ -15,7 +15,7 @@ only 1 Network working Weapon currently
 <p>NeoFPS ( https://assetstore.unity.com/packages/templates/systems/neofps-fps-controller-template-toolkit-150179 )</p>
 <p>Mirror Networking ( https://mirror-networking.com/ ) ( https://assetstore.unity.com/packages/tools/network/mirror-129321 )</p>
 
-# Files that need to be adjusted 
+# NeoFPS files that need to be modified 
 <p>File: FpsGameMode.cs<br>
 ( This allows the use of FpsNetCharacter and FpsNetPlayerController )<br>
 Line 132: protected abstract void ProcessOldPlayerCharacter(ICharacter oldCharacter);<br>
