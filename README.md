@@ -1,6 +1,7 @@
 # NeoFPS_Mirror-Networking
 
 This is an "In Progress" build
+NOTE: Spawning is done in the menu currently as i was working on something and disabled auto spawn and respawn is broken cuase of that but its a work in progress
 <p>
 Currently Working<br>
 Client Authority on<br>
