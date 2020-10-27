@@ -20,7 +20,7 @@ only 1 Network working Weapon currently
 <p>File: FpsGameMode.cs<br>
 ( This allows the use of FpsNetCharacter and FpsNetPlayerController )<br>
 Line 132: protected abstract void ProcessOldPlayerCharacter(ICharacter oldCharacter);<br>
-Line 134: protected abstract ICharacter GetPlayerCharacterPrototype(IController player);</p>
+Line 133: protected abstract IController InstantiatePlayer();</p>
 <br>
 <p>File: FpsSoloGameMinimal.cs<br>
 ( Correstion to keep the Solo working with Above Changes )<br>
