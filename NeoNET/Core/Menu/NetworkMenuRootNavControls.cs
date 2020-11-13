@@ -11,7 +11,7 @@ namespace NeoFPS.Mirror.Menu
     [HelpURL("http://docs.neofps.com/manual/samples-ui.html")]
     public class NetworkMenuRootNavControls : MenuNavControls
 	{
-        [SerializeField] private NetworkManager m_NetManager;
+        [SerializeField] private NetworkManager m_NetManager = null;
         [SerializeField] private MultiInputButton m_HostButton = null;
 		[SerializeField] private MultiInputButton m_JoinButton = null;
         [SerializeField] private MultiInputButton m_RespawnButton = null;

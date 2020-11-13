@@ -12,13 +12,15 @@ namespace NeoFPS.Mirror.NetworkPlayer
     public class FpsNetCharacter : BaseCharacter
     {
         public static event UnityAction<FpsNetCharacter> onLocalPlayerCharacterChange;
-        
         private static FpsNetCharacter m_LocalPlayerCharacter = null;
         public static FpsNetCharacter localPlayerCharacter
         {
             get { return m_LocalPlayerCharacter; }
             set
             {
+                if(value == null && !m_LocalPlayerCharacter.controller.isLocalPlayer)
+                    m_LocalPlayerCharacter = null;
+                
                 if(value.controller.isLocalPlayer){
                     m_LocalPlayerCharacter = value;
                     if (onLocalPlayerCharacterChange != null)
@@ -26,6 +28,7 @@ namespace NeoFPS.Mirror.NetworkPlayer
                 }
             }
         }
+    
         private CharacterInstance m_NetworkInstance = null;
         public CharacterInstance networkInstance
         {
@@ -35,6 +38,16 @@ namespace NeoFPS.Mirror.NetworkPlayer
                 m_NetworkInstance = value;
             }
         }
+        public override bool isLocalPlayerControlled
+        {
+            get { return isPlayerControlled && controller.isLocalPlayer; }
+        }
+
+        public override bool isRemotePlayerControlled
+        {
+            get { return isPlayerControlled && !controller.isLocalPlayer; }
+        }
+        
         protected override void Awake() {
             if (networkInstance == null)
                 networkInstance = GetComponent<CharacterInstance>();
@@ -45,8 +58,6 @@ namespace NeoFPS.Mirror.NetworkPlayer
         protected override void Start()
         {
             base.Start();
-            //We dont care if there is a Controller or Not.
-            gameObject.SetActive(true);
         }
 
         protected override void OnControllerChanged()
@@ -65,17 +76,25 @@ namespace NeoFPS.Mirror.NetworkPlayer
                 {
                     if (localPlayerCharacter == this)
                         localPlayerCharacter = null;
-                    // Disable the InputContols
                 }
 
                 if ((FpsNetCharacter)controller.currentCharacter != this)
                     controller.currentCharacter = this;
+
+                gameObject.SetActive(((MonoBehaviour)controller).isActiveAndEnabled);
             }
             else
             {
+                
                 if (localPlayerCharacter == this)
                     localPlayerCharacter = null;
+                
+                if(networkInstance.isServer && !healthManager.isAlive){
+                    Debug.Log("Remove the Old Char");
+                    Destroy(this.gameObject);
+                }
                 // Disable the object (needs a controller to function)
+                gameObject.SetActive(false);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Bunker.Menu
 	public class NetworkNavControls : MenuNavControls
 	{
 		[SerializeField]
-		private NetworkManager m_Manager;
+		private NetworkManager m_Manager = null;
 		[SerializeField]
         private MultiInputButton m_DisconnectButton = null;
 		[SerializeField]

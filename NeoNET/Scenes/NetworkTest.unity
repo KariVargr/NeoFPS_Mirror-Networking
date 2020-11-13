@@ -2146,6 +2146,11 @@ PrefabInstance:
       propertyPath: m_SpotAngle
       value: 45
       objectReference: {fileID: 0}
+    - target: {fileID: 108014184923503540, guid: 6959d9aa20c7c3248933be676cd8fee8,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 108498490423136892, guid: 6959d9aa20c7c3248933be676cd8fee8,
         type: 3}
       propertyPath: m_Range
@@ -2154,6 +2159,11 @@ PrefabInstance:
     - target: {fileID: 108498490423136892, guid: 6959d9aa20c7c3248933be676cd8fee8,
         type: 3}
       propertyPath: m_SpotAngle
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 108498490423136892, guid: 6959d9aa20c7c3248933be676cd8fee8,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
       value: 45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4972,6 +4982,18 @@ MonoBehaviour:
   expandNeoComponents: 0
   expandOtherComponents: 0
   prefabGuid: 
+--- !u!114 &675419728 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8867752149361173875, guid: fb0641b4908ab88428cbda221c1e0ea4,
+    type: 3}
+  m_PrefabInstance: {fileID: 540230280}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d77e2f62ba70da47a6989d78dbbfd38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &686871142
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6522,13 +6544,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 983040258}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21ed3bff1fb458d409a24da24ac34ebb, type: 3}
+  m_Script: {fileID: 11500000, guid: 0494c4667ea5d1642b32b7916174c499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ServerAuthority: 0
-  m_SpawnOnStart: 0
+  m_ServerAuthoritative: 0
+  m_SpawnOnStart: 1
   m_DeathSequenceDuration: 5
   m_DeathAction: 0
+  m_OnDeathEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 675419728}
+        m_MethodName: Show
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &983040265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8709,6 +8745,16 @@ PrefabInstance:
         type: 3}
       propertyPath: prefabGuid
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089617829358429703, guid: 13806803244fd774092ccf2ac8123620,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 9089617829358429703, guid: 13806803244fd774092ccf2ac8123620,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13806803244fd774092ccf2ac8123620, type: 3}
@@ -11772,6 +11818,11 @@ PrefabInstance:
       propertyPath: m_Range
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 108014184923503540, guid: 6959d9aa20c7c3248933be676cd8fee8,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 108498490423136892, guid: 6959d9aa20c7c3248933be676cd8fee8,
         type: 3}
       propertyPath: m_SpotAngle
@@ -11781,6 +11832,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Range
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 108498490423136892, guid: 6959d9aa20c7c3248933be676cd8fee8,
+        type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6959d9aa20c7c3248933be676cd8fee8, type: 3}

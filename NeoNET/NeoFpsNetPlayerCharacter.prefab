@@ -436,7 +436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  m_ClientInstance: {fileID: 0}
+  m_Character: {fileID: 617423327269837948}
   m_serverInputAuth: 0
 --- !u!114 &8997924801412768899
 MonoBehaviour:

@@ -32800,42 +32800,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_DeathFade: 2
   m_FadeDelay: 1
-  m_OnDeathMenu:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8867752149361173875}
-        m_MethodName: Show
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8867752149361173875}
-        m_MethodName: ShowNavControls
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1129037554854913087}
-          m_ObjectArgumentAssemblyTypeName: NeoFPS.Samples.MenuNavControls, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3399436035708510021}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &3400133172093251237
 GameObject:
   m_ObjectHideFlags: 0

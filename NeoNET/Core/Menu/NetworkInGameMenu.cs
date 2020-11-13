@@ -19,7 +19,7 @@ namespace NeoFPS.Mirror.Menu
         [SerializeField] private InGameMenuBackground m_Background = null;
         [SerializeField] private int m_MainMenuScene = 0;
 		[SerializeField][Range (0f, 1f)] private float m_HudAlpha = 0.25f;
-        [SerializeField] private NetworkManager m_NetManager;
+        [SerializeField] private NetworkManager m_NetManager = null;
 
 #if UNITY_EDITOR
         void OnValidate ()
@@ -72,12 +72,15 @@ namespace NeoFPS.Mirror.Menu
 
 		void OnExitYes ()
 		{
-            if (NetworkServer.active && NetworkClient.isConnected)
-                m_NetManager.StopHost();
-            else if (NetworkClient.isConnected)
-                m_NetManager.StopClient();
-            else if (NetworkServer.active)
-                m_NetManager.StopServer();
+            if (m_NetManager != null)
+            {
+				if (NetworkServer.active && NetworkClient.isConnected)
+					m_NetManager.StopHost();
+				else if (NetworkClient.isConnected)
+					m_NetManager.StopClient();
+				else if (NetworkServer.active)
+					m_NetManager.StopServer();
+			}
             
             SceneManager.LoadScene (m_MainMenuScene);
 		}
@@ -117,6 +120,9 @@ namespace NeoFPS.Mirror.Menu
 
 		void OnJoinSubmit ()
 		{
+			if (m_NetManager == null)
+        		return;
+
 			m_NetManager.StartClient();
 			SpinnerPopup.ShowPopup(
 				"Connecting to Host",
