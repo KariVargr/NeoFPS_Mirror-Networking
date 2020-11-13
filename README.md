@@ -1,7 +1,9 @@
 # NeoFPS_Mirror-Networking
 
-This is an "In Progress" build
-NOTE: Spawning is done in the menu currently as i was working on something and disabled auto spawn and respawn is broken cuase of that but its a work in progress
+This is an "In Progress" build <br>
+NOTE: The only 1 Working weapon prefab, Activly working on the "Shooter" to support network<br>
+Will be building in time dilation for projectile shooters to spawn and them up untill synce across all clients<br>
+Looking in to Lag Comp for Raycast shooters, may be intergarting some 3rd party assest to improve Lag Comp/Rollback for weapons
 <p>
 Currently Working<br>
 Client Authority on<br>
@@ -32,5 +34,9 @@ Line 175: protected override void ProcessOldPlayerCharacter(ICharacter oldCharac
 Line 24: public virtual bool isLocalPlayer</p>
 
 # Recommendation 
-I suggest using First Gear Games Mirror "Assets For Mirror Networking" (https://www.patreon.com/firstgeargames/posts)<br>
+<p>I suggest using First Gear Games Mirror "Assets For Mirror Networking" (https://www.patreon.com/firstgeargames/posts)<br>
 His FlexNetworkTransform is very handy and i have been using his tutorials to help, and seem to be making quite a few assets to improve the Mirror Networking.
+</p>
+<p>
+I also suggest using https://github.com/SoftwareGuy/Ignorance/ transport lay for Mirror, this implaments ENet in to Mirror, to move away from UNet
+</p>
