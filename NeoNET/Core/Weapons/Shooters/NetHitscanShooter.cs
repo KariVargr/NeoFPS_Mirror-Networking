@@ -3,6 +3,7 @@ using UnityEngine.Serialization;
 using NeoSaveGames.Serialization;
 using NeoSaveGames;
 using System.Collections;
+using NeoFPS.Mirror.LagCompensation;
 
 namespace NeoFPS.ModularFirearms
 {
@@ -78,7 +79,7 @@ namespace NeoFPS.ModularFirearms
         {
             get { return m_MuzzleTip != null && m_Layers != 0; }
         }
-        public override void NetShoot (IAmmoEffect effect, float rollbackTime, Vector3 startPosition, Vector3 rayDirection)
+        public override void NetShoot (IAmmoEffect effect, float timeDelay, Vector3 startPosition, Vector3 rayDirection)
 		{
             // THIS IS A MODDED SHOOT COMMAND TO SUPPORT NETWORKTIME ROLLBACK
             // Just return if there is no effect
@@ -88,30 +89,8 @@ namespace NeoFPS.ModularFirearms
             // Get root game object to prevent impacts with body
             Transform ignoreRoot = GetRootTransform();
 
-            // Get the forward vector
-			Vector3 muzzlePosition = m_MuzzleTip.position;
-
-            bool useCamera = false;
-            if (firearm.wielder != null)
-            {
-                switch (m_UseCameraAim)
-                {
-                    case UseCameraAim.HipAndAimDownSights:
-                        useCamera = true;
-                        break;
-                    case UseCameraAim.AimDownSightsOnly:
-                        if (firearm.aimer != null)
-                            useCamera = firearm.aimer.isAiming;
-                        break;
-                    case UseCameraAim.HipFireOnly:
-                        if (firearm.aimer != null)
-                            useCamera = !firearm.aimer.isAiming;
-                        else
-                            useCamera = true;
-                        break;
-                }
-            }
-
+            // could possibly lag comp the gun pos as well, but for not take the location of player shot.
+            base.StartRayRollback(timeDelay);
             // Check for raycast hit
             Ray ray = new Ray(startPosition, rayDirection);
             Vector3 hitPoint;
@@ -121,29 +100,15 @@ namespace NeoFPS.ModularFirearms
             else
                 hitPoint = startPosition + (rayDirection * m_MaxDistance);
 
-            // Double check hit from gun muzzle to prevent near scenery weirdness
-            if (useCamera)
-            {
-                Vector3 newRayDirection = hitPoint - muzzlePosition;
-                newRayDirection.Normalize();
-                ray = new Ray(muzzlePosition, newRayDirection);
-                if (PhysicsExtensions.RaycastNonAllocSingle(ray, out m_Hit, m_MaxDistance, m_Layers, ignoreRoot, QueryTriggerInteraction.Ignore))
-                {
-                    hitPoint = m_Hit.point;
-                    effect.Hit(m_Hit, newRayDirection, m_Hit.distance, float.PositiveInfinity, firearm as IDamageSource);
-                }
-            }
-            else
-            {
-                if (didHit)
-                    effect.Hit(m_Hit, ray.direction, m_Hit.distance, float.PositiveInfinity, firearm as IDamageSource);
-            }
-
+            if (didHit)
+                effect.Hit(m_Hit, ray.direction, m_Hit.distance, float.PositiveInfinity, firearm as IDamageSource);
+            
+            base.StopRayRollback(timeDelay);
             // Draw the tracer line out to max distance
             if (m_TracerPrototype != null)
                 StartCoroutine(ShowTracer(hitPoint));
 
-			base.NetShoot(effect, rollbackTime, startPosition, rayDirection);
+			base.NetShoot(effect, timeDelay, startPosition, rayDirection);
         }
 
 		public override void Shoot (float accuracy, IAmmoEffect effect)

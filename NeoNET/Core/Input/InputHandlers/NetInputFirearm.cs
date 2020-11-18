@@ -42,7 +42,7 @@ namespace NeoFPS.Mirror
             if(m_NetworkInstance == null || !m_NetworkInstance.hasAuthority)
 				return;
 
-            if(!m_NetworkInstance.ServerInputAuth)
+            if(!m_NetworkInstance.isServerAuthoritative)
 			    base.Update();
         }
 	}

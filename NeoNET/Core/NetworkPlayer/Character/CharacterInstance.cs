@@ -15,18 +15,19 @@ namespace NeoFPS.Mirror
 		protected NeoCharacterController m_Controller;
 		protected MotionController m_MotionController;
 		//protected MotionController m_AnimationController;
-
-		private IWieldable m_ActiveWeapon;
-		private IQuickSlots m_WeaponInventory;
+		private NetWeaponHandler m_WeaponHandler;
 		private IHealthManager m_Health;
-
-		[SerializeField]
-		private bool m_serverInputAuth;
-		public bool ServerInputAuth
-		{
-			get{ return m_serverInputAuth; }
-			private set{ m_serverInputAuth = value; }
-		}
+		// Made Public for now as the Input watcher are looking at this.
+		public bool isServerAuthoritative
+        {
+            get
+            { 
+                if(FpsGameMode.current is FpsNetGameMinimal gameMode)    
+                    return gameMode.ServerAuthoritative;
+                
+                return false;
+            }
+        }
 
 		private void Awake()
 		{
@@ -85,28 +86,13 @@ namespace NeoFPS.Mirror
 				if(stamina != null)
 					stamina.onStaminaChanged += OnStaminaChanged;
 
-				//Setup Heal Watchers Calls
-				//GetComponent<FpsNetCharacter>().controller = m_ClientInstance.GetComponent<FpsNetPlayerController>();
-				if(!ServerInputAuth && base.isServer && !base.hasAuthority)
+				if(!isServerAuthoritative && base.isServer && !base.hasAuthority)
 					m_Controller.enabled = false;
 
 			}else{
 				m_Controller.enabled = false;
 			}
 
-			//Weapon/Inventory Watchers to make calls easier for weapon changes
-			m_WeaponInventory = GetComponent<IQuickSlots>();
-			if(m_WeaponInventory != null){
-				m_WeaponInventory.onSelectionChanged += OnWeaponChanged;
-				//weaponSlots.onSlotItemChanged
-				//weaponSlots.onItemDropped
-				
-				if(m_WeaponInventory is IInventory inventory){
-					//inventory.onItemAdded
-					//inventory.onItemRemoved
-				}
-				
-			}
 			this.enabled = true;
 		}
 		#region Stamina
@@ -115,350 +101,6 @@ namespace NeoFPS.Mirror
 			//if(base.isServer)
 				//SendStamina();
 		}
-		#endregion
-		#region Weapons
-		protected virtual void OnWeaponChanged(IQuickSlotItem target)
-		{
-			
-			Debug.Log(target.transform.name);
-			if(base.hasAuthority)
-				CmdWeaponChange(target.quickSlot);
-
-			if(m_ActiveWeapon != null)
-			{   
-				/*if(m_ActiveWeapon is IThrownWeapon thrownWeapon)
-				{
-					thrownWeapon.onThrowLight -= UseMainAttack;
-					thrownWeapon.onThrowHeavy -= UseAltAttack;
-				}*/
-
-				//if(m_ActiveWeapon is IMeleeWeapon meleeWeapon)
-				//    meleeWeapon.onAttack -= UseMainAttack;
-
-				if(m_ActiveWeapon is ModularFirearms.IModularFirearm fireWeapon)
-				{
-					fireWeapon.onModeChange -= OnModeChange;
-
-					if(fireWeapon.shooter is ModularFirearms.NetShooterBehaviour shooter)
-						shooter.onNetShoot -= UseMainAttack;
-
-					if(fireWeapon.ammo != null)
-					{
-						if(m_serverInputAuth && base.isServer && !base.hasAuthority)
-							fireWeapon.ammo.onCurrentAmmoChange -= AmmoSync;
-
-						if(base.hasAuthority && !base.isServer)
-							fireWeapon.ammo.onCurrentAmmoChange -= AmmoSync;
-					}
-					// Look Over Reload again
-					if(fireWeapon.reloader != null)
-					{
-						if(base.isClientOnly){
-							if(m_serverInputAuth){
-								fireWeapon.reloader.onReloadStart -= onReloadStart;
-							}else{
-								fireWeapon.reloader.onCurrentMagazineChange -= onMagChange;
-							}
-						}
-
-						if(base.isServer && !base.hasAuthority && m_serverInputAuth)
-							fireWeapon.reloader.onCurrentMagazineChange -= onMagChange;
-					}
-				}
-			}
-			m_ActiveWeapon = target.wieldable;
-			if(m_ActiveWeapon != null)
-			{
-				if(base.hasAuthority)
-					m_ActiveWeapon.GetComponent<FpsInput>().enabled = true;
-				else
-					m_ActiveWeapon.GetComponent<FpsInput>().enabled = false;
-					
-				/*if(m_ActiveWeapon is IThrownWeapon thrownWeapon)
-				{
-					thrownWeapon.onThrowLight += UseAltAttack;
-					thrownWeapon.onThrowHeavy += UseMainAttack;
-				}*/
-
-				//if(m_ActiveWeapon is IMeleeWeapon meleeWeapon)
-					//meleeWeapon.onAttack += UseMainAttack;
-
-				if(m_ActiveWeapon is ModularFirearms.IModularFirearm fireWeapon)
-				{
-					fireWeapon.onModeChange += OnModeChange;
-
-					if(fireWeapon.shooter is ModularFirearms.NetShooterBehaviour shooter)
-						shooter.onNetShoot += UseMainAttack;
-
-					if(fireWeapon.ammo != null)
-					{
-						if(m_serverInputAuth && base.isServer && !base.hasAuthority)
-							fireWeapon.ammo.onCurrentAmmoChange += AmmoSync;
-
-						if(base.hasAuthority && !base.isServer)
-							fireWeapon.ammo.onCurrentAmmoChange += AmmoSync;
-					}
-					// Look Over Reload again
-					if(fireWeapon.reloader != null)
-					{
-						if(base.isClientOnly){
-							if(m_serverInputAuth){
-								fireWeapon.reloader.onReloadStart += onReloadStart;
-							}else{
-								fireWeapon.reloader.onCurrentMagazineChange += onMagChange;
-							}
-						}
-
-						if(base.isServer && !base.hasAuthority && m_serverInputAuth)
-							fireWeapon.reloader.onCurrentMagazineChange += onMagChange;
-					}
-				}
-			}
-		}   
-		[Command]
-		private void CmdWeaponChange(int target)
-		{
-			RpcWeaponChange(target);
-			if (base.isServerOnly || (base.isClient && !base.hasAuthority))
-				m_WeaponInventory.SelectSlot(target);
-		}
-		[ClientRpc]
-		private void RpcWeaponChange(int target)
-		{
-			
-			if (base.hasAuthority || base.isServer)
-				return;
-
-			m_WeaponInventory.SelectSlot(target);
-		}
-
-		private void OnModeChange(ModularFirearms.IModularFirearm firearm, string name)
-		{
-			if(base.hasAuthority)
-				CmdModeChange(name);
-		}
-		[Command]
-		private void CmdModeChange(string name)
-		{
-			RpcModeChange(name);
-			if (base.isServerOnly || (base.isClient && !base.hasAuthority)){
-				/*if ((m_ActiveWeapon as ModularFirearms.ModularFirearm).modeSwitcher != null)
-					(m_ActiveWeapon as ModularFirearms.ModularFirearm).modeSwitcher.SwitchModeTo(name);
-				else*/
-					(m_ActiveWeapon as ModularFirearms.ModularFirearm).mode = name;
-			}
-		}
-		[ClientRpc]
-		private void RpcModeChange(string name)
-		{
-			if (base.hasAuthority || base.isServer)
-				return;
-
-			/*if ((m_ActiveWeapon as ModularFirearms.ModularFirearm).modeSwitcher != null)
-				(m_ActiveWeapon as ModularFirearms.ModularFirearm).modeSwitcher.SwitchModeTo(name);
-			else*/
-				(m_ActiveWeapon as ModularFirearms.ModularFirearm).mode = name;
-		}
-		
-		#region Ammo Monitor
-		private void AmmoSync(ModularFirearms.IModularFirearm weapon, int amount)
-		{
-			if(base.isServer){
-				TargetAmmoSync(amount);
-			}else{
-				CmdAmmoSync(amount);
-			}
-		}
-		[Command]
-		private void CmdAmmoSync(int amount)
-		{
-			int oldAmmoCount = (m_ActiveWeapon as ModularFirearms.ModularFirearm).ammo.currentAmmo;
-			if(oldAmmoCount > amount){
-				(m_ActiveWeapon as ModularFirearms.ModularFirearm).ammo.DecrementAmmo(oldAmmoCount - amount);
-			}else if(oldAmmoCount < amount){
-				(m_ActiveWeapon as ModularFirearms.ModularFirearm).ammo.IncrementAmmo(amount - oldAmmoCount);
-			}
-		}
-		[TargetRpc]
-		private void TargetAmmoSync(int amount)
-		{
-			int oldAmmoCount = (m_ActiveWeapon as ModularFirearms.ModularFirearm).ammo.currentAmmo;
-			if(oldAmmoCount > amount){
-				(m_ActiveWeapon as ModularFirearms.ModularFirearm).ammo.DecrementAmmo(oldAmmoCount - amount);
-			}else if(oldAmmoCount < amount){
-				(m_ActiveWeapon as ModularFirearms.ModularFirearm).ammo.IncrementAmmo(amount - oldAmmoCount);
-			}
-		}
-		#endregion
-		private void onReloadStart(ModularFirearms.IModularFirearm weapon)
-		{
-			if(base.hasAuthority && m_serverInputAuth && !base.isServer)
-				CmdReload(0);
-		}
-		private void onMagChange(ModularFirearms.IModularFirearm weapon, int amount)
-		{
-			if(base.isServer && m_serverInputAuth)
-				TargetReload(amount);
-			
-			if(base.isClientOnly && !m_serverInputAuth)
-				CmdReload(amount);
-			
-		}
-
-		[Command]
-		private void CmdReload(int amount)
-		{
-			if (base.isServerOnly || (base.isClient && !base.hasAuthority)){
-				if(m_serverInputAuth){
-					(m_ActiveWeapon as ModularFirearms.ModularFirearm).reloader.Reload();
-				}else{
-					int oldMagazineSize = (m_ActiveWeapon as ModularFirearms.ModularFirearm).reloader.currentMagazine;
-					(m_ActiveWeapon as ModularFirearms.ModularFirearm).ammo.DecrementAmmo (amount - oldMagazineSize);
-					(m_ActiveWeapon as ModularFirearms.ModularFirearm).reloader.currentMagazine = amount;
-				}
-			}
-		}
-		[TargetRpc]
-		public void TargetReload(int amount)
-		{
-			if(m_serverInputAuth){
-				(m_ActiveWeapon as ModularFirearms.ModularFirearm).reloader.ManualReloadComplete(); // Write Overrider here to block ammo change this will be sent from server
-				(m_ActiveWeapon as ModularFirearms.ModularFirearm).reloader.currentMagazine = amount;
-			}
-		}
-
-		#region Attack Calls  
-		private void UseMainAttack(Vector3 position, Vector3 forward)
-		{
-			Debug.Log(this.name +" MAIN FIRE");
-			if (base.hasAuthority){
-				double adjustedNetworkTime = NetworkTime.time - (NetworkTime.rtt / 2d);
-				if (base.isServer){
-					RpcUseWeapon(adjustedNetworkTime, position, forward, false);
-				}else{
-					CmdUseWeapon(adjustedNetworkTime, position, forward, false);
-				}
-				Debug.Log(adjustedNetworkTime);
-			}
-		}
-
-		private void UseAltAttack(Vector3 position, Vector3 forward)
-		{
-			Debug.Log(this.name +" MAIN FIRE");
-			if (base.hasAuthority){
-				double adjustedNetworkTime = NetworkTime.time - (NetworkTime.rtt / 2d);
-				if (base.isServer){
-					RpcUseWeapon(adjustedNetworkTime, position, forward, true);
-				}else{
-					CmdUseWeapon(adjustedNetworkTime, position, forward, true);
-				}
-			}
-		}
-		[Command]
-		private void CmdUseWeapon (double networkTime, Vector3 position, Vector3 forward, bool altAttack)
-		{
-			RpcUseWeapon(networkTime, position, forward, altAttack);
-			if (base.isServerOnly || (base.isClient && !base.hasAuthority))
-			{
-				//Things to Add?
-				//Weapon Check
-				//Ammo Check
-				//Delay Check
-				
-				//If player is too far from fire point on server then do not fire.
-				float maxDistance = 1f;
-				float distance = Vector3.Distance(position, new Vector3(transform.position.x, position.y, transform.position.z));
-				if (distance >= maxDistance)
-					return;
-
-				float rollbackTime = (float)(NetworkTime.time - networkTime) - Time.fixedDeltaTime;
-				// Untested Thrown and Melee
-				if(m_ActiveWeapon is IThrownWeapon thrownWeapon){
-					if(altAttack)
-						thrownWeapon.ThrowLight();
-					else
-						thrownWeapon.ThrowHeavy();
-				}
-
-				if(m_ActiveWeapon is IMeleeWeapon meleeWeapon){
-					if(altAttack)
-						Debug.Log("Melee Currently do not Support Alt Attack");
-					else
-						meleeWeapon.Attack();
-				}
-				
-				if(m_ActiveWeapon is ModularFirearms.IModularFirearm fireWeapon)
-					Shoot(rollbackTime, position, forward, fireWeapon);
-			}
-				
-		}
-		[ClientRpc]
-		private void RpcUseWeapon (double networkTime, Vector3 position, Vector3 forward, bool altAttack)
-		{
-			if (base.hasAuthority || base.isServer)
-				return;
-
-			//If player is too far from fire point on server then do not fire.
-			float maxDistance = 1f;
-			float distance = Vector3.Distance(position, new Vector3(transform.position.x, position.y, transform.position.z));
-			if (distance >= maxDistance)
-				return;
-
-			float rollbackTime = (float)(NetworkTime.time - networkTime) - Time.fixedDeltaTime;
-
-			if(m_ActiveWeapon is IThrownWeapon thrownWeapon){
-				if(altAttack)
-					thrownWeapon.ThrowLight();
-				else
-					thrownWeapon.ThrowHeavy();
-	
-			}
-
-			if(m_ActiveWeapon is IMeleeWeapon meleeWeapon){
-				if(altAttack)
-					Debug.Log("Melee Currently do not Support Alt Attack");
-				else
-					meleeWeapon.Attack();
-
-			}
-			
-			if(m_ActiveWeapon is ModularFirearms.IModularFirearm fireWeapon){
-				if(altAttack)
-					Debug.Log("Firearms Currently do not Support Alt Attack");
-				else
-					Shoot(rollbackTime, position, forward, fireWeapon);
-				
-			}
-
-		}
-		private void Shoot(float rollbackTime, Vector3 position, Vector3 forward, ModularFirearms.IModularFirearm fireWeapon) 
-		{
-			Debug.Log("FIRE WEAPON");
-			// Shoot
-			if (fireWeapon.shooter != null && fireWeapon.shooter is ModularFirearms.NetShooterBehaviour netShooter)
-				netShooter.NetShoot(fireWeapon.ammo.effect, rollbackTime, position, forward);
-
-			// Play animation *Currently not needed for Net as its Trigger only?*
-			//if (m_FireAnimTriggerHash != -1 && animator != null && animator.isActiveAndEnabled)
-			//	animator.SetTrigger (m_FireAnimTriggerHash);
-
-			// Handle recoil
-			if (fireWeapon.recoilHandler != null)
-				fireWeapon.recoilHandler.Recoil ();
-
-			// Show the muzzle effect & play firing sound
-			if (fireWeapon.muzzleEffect != null)
-				fireWeapon.muzzleEffect.Fire ();
-
-			// Eject shell
-			if (fireWeapon.ejector != null && fireWeapon.ejector.ejectOnFire)
-				fireWeapon.ejector.Eject ();
-
-			// Decrement ammo
-			if(base.isServer)
-				fireWeapon.reloader.DecrementMag (1);
-		}
-		#endregion
 		#endregion
 	}
 }
@@ -493,11 +135,6 @@ Melee
 Thrown
 -Attack
 -Attack light
-
----Health---
-Add Area of Damage
--Status (Alive/Dead)
--Health Changes with Source
 
 ---Stamina---
 No Idea look in to system

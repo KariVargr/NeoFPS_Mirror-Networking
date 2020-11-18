@@ -79,7 +79,7 @@ namespace NeoFPS.ModularFirearms
             }
         }
 
-        public override void NetShoot (IAmmoEffect effect, float rollbackTime, Vector3 startPosition, Vector3 rayDirection)
+        public override void NetShoot (IAmmoEffect effect, float delay, Vector3 startPosition, Vector3 rayDirection)
 		{
             if (m_ProjectilePrefab != null)
             {
@@ -88,51 +88,13 @@ namespace NeoFPS.ModularFirearms
 
                 Transform ignoreRoot = GetRootTransform();
 
-                // Get the forward vector
-                Vector3 muzzlePosition = m_MuzzleTip.position;
+                if(projectile is NetBallisticProjectile netProjectile)
+                    netProjectile.SetCatchup(delay, rayDirection * m_MuzzleSpeed, m_Gravity);
 
-                bool useCamera = false;
-                if (firearm.wielder != null)
-                {
-                    switch (m_UseCameraAim)
-                    {
-                        case UseCameraAim.HipAndAimDownSights:
-                            useCamera = true;
-                            break;
-                        case UseCameraAim.AimDownSightsOnly:
-                            if (firearm.aimer != null)
-                                useCamera = firearm.aimer.isAiming;
-                            break;
-                        case UseCameraAim.HipFireOnly:
-                            if (firearm.aimer != null)
-                                useCamera = !firearm.aimer.isAiming;
-                            else
-                                useCamera = true;
-                            break;
-                    }
-                }
-
-                Ray ray = new Ray(startPosition, rayDirection);
-                Vector3 hitPoint;
-                if (PhysicsExtensions.RaycastNonAllocSingle(ray, out m_Hit, k_MaxDistance, m_Layers, ignoreRoot, QueryTriggerInteraction.Ignore))
-                    hitPoint = m_Hit.point;
-                else
-                    hitPoint = startPosition + (rayDirection * k_MaxDistance);
-
-                if (useCamera)
-                {
-                    Vector3 newDirection = hitPoint - muzzlePosition;
-                    newDirection.Normalize();
-                    projectile.Fire(muzzlePosition, newDirection * m_MuzzleSpeed, m_Gravity, effect, firearm.wielder.gameObject.transform, m_Layers, firearm as IDamageSource);
-                    projectile.gameObject.SetActive(true);
-                }
-                else
-                {
-                    projectile.Fire(startPosition, rayDirection * m_MuzzleSpeed, m_Gravity, effect, ignoreRoot, m_Layers, firearm as IDamageSource);
-                    projectile.gameObject.SetActive(true);
-                }
+                projectile.Fire(startPosition, rayDirection * m_MuzzleSpeed, m_Gravity, effect, ignoreRoot, m_Layers, firearm as IDamageSource);
+                projectile.gameObject.SetActive(true);
             }
-            base.NetShoot(effect, rollbackTime, startPosition, rayDirection);
+            base.NetShoot(effect, delay, startPosition, rayDirection);
         }
 
         public override void Shoot(float accuracy, IAmmoEffect effect)
@@ -215,14 +177,6 @@ namespace NeoFPS.ModularFirearms
 
         protected virtual void InitialiseProjectile(IProjectile projectile)
         { }
-
-        Transform GetRootTransform()
-        {
-            var t = transform;
-            while (t.parent != null)
-                t = t.parent;
-            return t;
-        }
 
         private static readonly NeoSerializationKey k_LayersKey = new NeoSerializationKey("layers");
 

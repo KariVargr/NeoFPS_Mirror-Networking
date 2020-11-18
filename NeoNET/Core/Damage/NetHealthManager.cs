@@ -8,6 +8,17 @@ using UnityEngine.Events;
 namespace NeoFPS.Mirror
 {
     [HelpURL("https://docs.neofps.com/manual/healthref-mb-basichealthmanager.html")]
+    /*
+    Notes: Below is based on HealthManager
+
+    Things to work
+
+    Check over the Damage Passing,
+    Possibly stop health sycn to all, and only sync between server and owner
+
+    Pass Send dead and alive signals.
+
+    */
     public class NetHealthManager : NetworkBehaviour, IHealthManager, INeoSerializableComponent
     {
         [Tooltip("The starting health of the character.")]

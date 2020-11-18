@@ -24,7 +24,7 @@ namespace NeoFPS.Mirror
 
         protected override void UpdateInput()
         {
-            if(m_NetworkInstance.ServerInputAuth)
+            if(m_NetworkInstance.isServerAuthoritative)
             {
                 // Movement input get the move input in advance to sent to server
                 Vector2 move = new Vector2 (
@@ -50,7 +50,7 @@ namespace NeoFPS.Mirror
             if(m_NetworkInstance == null || !m_NetworkInstance.hasAuthority)
 				return;
 
-            if(!m_NetworkInstance.ServerInputAuth)
+            if(!m_NetworkInstance.isServerAuthoritative)
 			    base.Update();
         }
     }

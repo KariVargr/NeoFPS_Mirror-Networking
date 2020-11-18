@@ -1,5 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using System;
+#if FIRSTGEARGAMES_COLLIDERROLLBACKS
+using FirstGearGames.Mirrors.Assets.ColliderRollbacks;
+#else
+using NeoFPS.Mirror.LagCompensation;
+#endif
 using NeoSaveGames.Serialization;
 using NeoSaveGames;
 
@@ -15,9 +21,32 @@ namespace NeoFPS.ModularFirearms
 				onNetShoot (position, forward);
         }
 
-		public virtual void NetShoot (IAmmoEffect effect, float rollbackTime, Vector3 position, Vector3 forward)
+		public virtual void NetShoot (IAmmoEffect effect, float delay, Vector3 position, Vector3 forward)
 		{
 			SendOnShootEvent();
+		}
+
+		protected void StartRayRollback (float timeDelay)
+		{
+#if FIRSTGEARGAMES_COLLIDERROLLBACKS
+			Debug.Log("RollbackCalled "+timeDelay);
+			if(timeDelay > 0f)
+				RollbackManager.RollbackSteps(timeDelay, RollbackManager.PhysicsTypes.ThreeDimensional);
+#else
+			if(timeDelay > 0f)
+                LagCompensationManager.StartSimulation(timeDelay);
+#endif
+		}
+
+		protected void StopRayRollback (float timeDelay)
+		{
+#if FIRSTGEARGAMES_COLLIDERROLLBACKS
+			if(timeDelay > 0f)
+				RollbackManager.ReturnForward();
+#else
+			if(timeDelay > 0f)
+                LagCompensationManager.StopSimulation();
+#endif
 		}
 
 		protected Transform GetRootTransform()
